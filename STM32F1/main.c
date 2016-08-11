@@ -48,7 +48,19 @@ int main()
 
 
 	/* wait for host to upload program or halt bootloader */
-	bool no_user_jump = (!checkUserCode(USER_CODE_FLASH0X8005000) && !checkUserCode(USER_CODE_FLASH0X8002000)) || readButtonState() ;
+	bool no_user_jump = FALSE;
+	if (checkAndClearBootloaderFlag())
+	{
+		no_user_jump = TRUE;
+	}
+	else if (!checkUserCode(USER_CODE_FLASH0X8005000) && !checkUserCode(USER_CODE_FLASH0X8002000))
+	{
+		no_user_jump = TRUE;
+	}
+	else if (readButtonState())
+	{
+		no_user_jump = TRUE;
+	}
 	
 	int delay_count = 0;
 
